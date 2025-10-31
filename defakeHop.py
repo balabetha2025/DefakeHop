@@ -152,14 +152,21 @@ def fit_all_channel_wise_clf(features, labels, n_jobs=4):
 def fit_channel_wise_clf(features, labels, hop, channel):
     print("===Hop", hop, "Channel",  channel, "Start===")
     labels = labels.astype(int)
-    clf = XGBClassifier(max_depth=1, tree_method='gpu_hist', objective='binary:logistic', eval_metric='auc', 
-                        scale_pos_weight=(len(labels[labels==0])/len(labels[labels==1])), 
-                        use_label_encoder=False)
+    clf = XGBClassifier(
+        max_depth=1,
+        objective='binary:logistic',
+        eval_metric='auc',
+        scale_pos_weight=(len(labels[labels==0]) / len(labels[labels==1])),
+        use_label_encoder=False,
+        tree_method="hist",          # <- changed from 'gpu_hist'
+        predictor="cpu_predictor",   # <- added to force CPU
+    )
     clf.fit(features, labels)
     if not os.path.exists("tmp/" + str(hop) + '/' + str(channel)):
         os.makedirs("tmp/" + str(hop) + '/' + str(channel))
-    pickle.dump(clf, open("tmp/" + str(hop) + '/' + str(channel) + ".pkl", "wb" ))
+    pickle.dump(clf, open("tmp/" + str(hop) + '/' + str(channel) + ".pkl", "wb"))
     print("===Hop", hop, "Channel",  channel, "Finish===")
+
 
 if __name__ == '__main__':
     import time

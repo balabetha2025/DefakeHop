@@ -121,7 +121,8 @@ class Ensemble():
         }
         labels = labels.astype(int)
         xgb = XGBClassifier(n_estimators=100, learning_rate=0.2, eval_metric='auc', objective='binary:logistic',
-                            tree_method='gpu_hist', scale_pos_weight=(len(labels[labels==0])/len(labels[labels==1])),
+                            tree_method='hist', predictor='cpu_predictor',
+                            scale_pos_weight=(len(labels[labels==0])/len(labels[labels==1])),
                             use_label_encoder=False)
         skf = StratifiedKFold(n_splits=folds, shuffle = True, random_state = 0)
         clf = RandomizedSearchCV(xgb, param_distributions=params, n_iter=param_comb, scoring='roc_auc', n_jobs=8, cv=skf.split(features,labels), random_state=1001)
@@ -150,7 +151,7 @@ if __name__ == '__main__':
         return name.replace(name.split('_')[-1],'')[0:-1]
     import multiprocessing
     multiprocessing.set_start_method('spawn')
-    model = Ensemble(regions=['left_eye', 'right_eye', 'mouth'], num_frames=6, verbose=True)
+    model = Ensemble(regions=['left_eye', 'right_eye'], num_frames=6, verbose=True)
     # more parameters for multi channel-wise Saab feature extraction
     multi_cwSaab_parm = dict(num_hop=3, kernel_sizes=[3,3,3], split_thr=0.01, keep_thr=0.001, 
                             max_channels=[10,10,10], spatial_components=[0.9,0.9,0.9], n_jobs=4, verbose=True)

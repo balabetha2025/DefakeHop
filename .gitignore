@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+.ipynb_checkpoints/
+
+# Envs & secrets
+.env
+.venv/
+.env.*
+*.key
+*.pem
+
+# OS/Editor
+.DS_Store
+.vscode/
+
+# Project artifacts
+models/
+data/**/*.npz
+data/**/*.mp4
+output*/
+*.csv
+!inference_output.csv   # keep the small final CSV
+
