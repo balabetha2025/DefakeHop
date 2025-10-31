@@ -18,7 +18,9 @@ __pycache__/
 .vscode/
 
 # Project artifacts
-models/
+models/*
+!models/*.pkl
+!models/meta.json
 data/**/*.npz
 data/**/*.mp4
 output*/
